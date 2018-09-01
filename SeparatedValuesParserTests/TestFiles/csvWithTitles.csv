@@ -1,3 +1,3 @@
-Name,Surname,University
-Testy,Testerson,Acme University
-Bob,Burger,University of Life
+Name,Surname,University,Age,Honor Student
+Testy,Testerson,Acme University,20,false
+Bob,Burger,University of Life,19,true

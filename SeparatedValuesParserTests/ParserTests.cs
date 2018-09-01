@@ -1,4 +1,5 @@
 using CsvParser;
+using SeparatedValuesParser;
 using Shouldly;
 using System.IO;
 using System.Linq;
@@ -21,8 +22,8 @@ namespace CsvParserTests
                 .ToList();
 
             results.Count.ShouldBe(2);
-            results[0].ShouldBe(new Record { Name = "Testy", Surname = "Testerson", University = "Acme University" });
-            results[1].ShouldBe(new Record { Name = "Bob", Surname = "Burger", University = "University of Life" });
+            results[0].ShouldBe(new Record { Name = "Testy", Surname = "Testerson", University = "Acme University", Age = 20, HonorStudent = false });
+            results[1].ShouldBe(new Record { Name = "Bob", Surname = "Burger", University = "University of Life", Age = 19, HonorStudent = true });
         }
 
         [Theory]
@@ -33,13 +34,13 @@ namespace CsvParserTests
             var results = new ParserBuilder<Record>()
                 .WithSeparator(separator)
                 .WithSource(ReadEmbeddedResource(filename))
-                .WithTitles(new string[] { "Name", "Surname", "University" })
+                .WithTitles(new string[] { "Name", "Surname", "University", "Age", "Honor Student" })
                 .Build()
                 .ToList();
 
             results.Count.ShouldBe(2);
-            results[0].ShouldBe(new Record { Name = "Testy", Surname = "Testerson", University = "Acme University" });
-            results[1].ShouldBe(new Record { Name = "Bob", Surname = "Burger", University = "University of Life" });
+            results[0].ShouldBe(new Record { Name = "Testy", Surname = "Testerson", University = "Acme University", Age = 20, HonorStudent = false});
+            results[1].ShouldBe(new Record { Name = "Bob", Surname = "Burger", University = "University of Life", Age = 19, HonorStudent = true });
         }
 
         private StreamReader ReadEmbeddedResource(string name)
@@ -53,6 +54,10 @@ namespace CsvParserTests
             public string Name { get; set; }
             public string Surname { get; set; }
             public string University { get; set; }
+            public int Age { get; set; }
+
+            [SeparatedValueProperty("Honor Student")]
+            public bool HonorStudent { get; set; }
 
             public override bool Equals(object obj)
             {
@@ -60,7 +65,9 @@ namespace CsvParserTests
                 return record != null &&
                        Name == record.Name &&
                        Surname == record.Surname &&
-                       University == record.University;
+                       University == record.University &&
+                       Age == record.Age &&
+                       HonorStudent == record.HonorStudent;
             }
         }
     }

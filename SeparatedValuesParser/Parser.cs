@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SeparatedValuesParser;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -62,16 +63,26 @@ namespace CsvParser
 
             _titles.ForEach(t =>
             {
-                var prop = typeof(T).GetProperties().First(pi => pi.Name.Equals(t, StringComparison.OrdinalIgnoreCase));
+                var prop = typeof(T).GetProperties().First(pi => Match(t, pi));
                 _properties.Add(prop);
             });
+        }
+
+        private bool Match(string name, PropertyInfo info)
+        {
+            var prop = info.GetCustomAttribute<SeparatedValueProperty>();
+            return (prop != null && name.Equals(prop.Title, StringComparison.OrdinalIgnoreCase)) ||
+                info.Name.Equals(name, StringComparison.OrdinalIgnoreCase);
         }
 
         private T PopulateObject(List<string> values)
         {
             var obj = (T)Activator.CreateInstance(typeof(T));
             int index = 0;
-            _properties.ForEach(pi => pi.SetValue(obj, values[index++]));
+            _properties.ForEach(pi => {
+                var val = StringToType.ToType(values[index++], pi.PropertyType);
+                pi.SetValue(obj, val);
+                });
             return obj;
         }
     }
