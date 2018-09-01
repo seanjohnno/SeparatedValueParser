@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="TestFiles\csvNoTitles.csv" />
+    <None Remove="TestFiles\csvWithTitles.csv" />
+    <None Remove="TestFiles\tsvNoTitles.tsv" />
+    <None Remove="TestFiles\tsvWithTitles.tsv" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.7.0" />
+    <PackageReference Include="Shouldly" Version="3.0.0" />
+    <PackageReference Include="xunit" Version="2.3.1" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.3.1" />
+    <DotNetCliToolReference Include="dotnet-xunit" Version="2.3.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="TestFiles\csvNoTitles.csv" />
+    <EmbeddedResource Include="TestFiles\csvWithTitles.csv" />
+    <EmbeddedResource Include="TestFiles\tsvNoTitles.tsv" />
+    <EmbeddedResource Include="TestFiles\tsvWithTitles.tsv" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CsvParser\SeparatedValuesParser.csproj" />
+  </ItemGroup>
+
+</Project>
