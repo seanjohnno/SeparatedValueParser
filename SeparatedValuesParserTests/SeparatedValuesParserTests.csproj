@@ -29,7 +29,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CsvParser\SeparatedValuesParser.csproj" />
+    <ProjectReference Include="..\SeparatedValuesParser\SeparatedValuesParser.csproj" />
   </ItemGroup>
 
 </Project>
