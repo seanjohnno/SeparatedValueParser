@@ -12,7 +12,10 @@ namespace CsvParser
         private readonly char _separator;
         private readonly Tokenizer _tokenizer;
         private readonly List<string> _titles;
-        private readonly List<PropertyInfo> _properties = new List<PropertyInfo>();
+        //private readonly List<PropertyInfo> _properties = new List<PropertyInfo>();
+        //private readonly List<int> _titleToPropertyPositions = new List<int>();
+
+        private Dictionary<string, PropertyInfo> _titleToProperty = new Dictionary<string, PropertyInfo>();
 
         public Parser(char separator, Tokenizer streamReader, List<string> titles)
         {
@@ -29,19 +32,28 @@ namespace CsvParser
         {
             PopulateTitles();
 
-            List<string> currentList = new List<string>(_titles.Count);
-            bool finished = false;
+            var currentList = new Dictionary<PropertyInfo, string>();
+            var finished = false;
+            var index = 0;
             while(!finished)
             {
                 var next = _tokenizer.Next();
                 if (next.TokenType == TokenType.Value)
                 {
-                    currentList.Add(next.Value);
+                    var title = _titles[index];
+                    _titleToProperty.TryGetValue(title, out PropertyInfo info);
+                    if(info != null)
+                    {
+                        currentList[info] = next.Value;
+                    }
+
+                    index++;
                 }
-                else if(currentList.Count > 0)
+                else if(next.TokenType == TokenType.Newline)
                 {
                     yield return PopulateObject(currentList);
                     currentList.Clear();
+                    index = 0;
                 }
                 else if(next.TokenType == TokenType.EndOfStream)
                 {
@@ -63,8 +75,11 @@ namespace CsvParser
 
             _titles.ForEach(t =>
             {
-                var prop = typeof(T).GetProperties().First(pi => Match(t, pi));
-                _properties.Add(prop);
+                var prop = typeof(T).GetProperties().FirstOrDefault(pi => Match(t, pi));
+                if(prop != null)
+                {
+                    _titleToProperty.Add(t, prop);
+                }
             });
         }
 
@@ -75,14 +90,15 @@ namespace CsvParser
                 info.Name.Equals(name, StringComparison.OrdinalIgnoreCase);
         }
 
-        private T PopulateObject(List<string> values)
+        private T PopulateObject(Dictionary<PropertyInfo, string> values)
         {
             var obj = (T)Activator.CreateInstance(typeof(T));
-            int index = 0;
-            _properties.ForEach(pi => {
-                var val = StringToType.ToType(values[index++], pi.PropertyType);
-                pi.SetValue(obj, val);
-                });
+            values.Keys.ToList().ForEach(k =>
+            {
+                var val = values[k];
+                var parsedVal = StringToType.ToType(val, k.PropertyType);
+                k.SetValue(obj, parsedVal);
+            });
             return obj;
         }
     }

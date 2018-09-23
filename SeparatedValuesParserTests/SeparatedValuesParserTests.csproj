@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="TestFiles\csvMissingValues.csv" />
     <None Remove="TestFiles\csvNoTitles.csv" />
     <None Remove="TestFiles\csvWithTitles.csv" />
     <None Remove="TestFiles\tsvNoTitles.tsv" />
@@ -23,6 +24,7 @@
 
   <ItemGroup>
     <EmbeddedResource Include="TestFiles\csvNoTitles.csv" />
+    <EmbeddedResource Include="TestFiles\csvMissingValues.csv" />
     <EmbeddedResource Include="TestFiles\csvWithTitles.csv" />
     <EmbeddedResource Include="TestFiles\tsvNoTitles.tsv" />
     <EmbeddedResource Include="TestFiles\tsvWithTitles.tsv" />

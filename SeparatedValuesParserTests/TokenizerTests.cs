@@ -65,6 +65,16 @@ namespace CsvParserTests
             tokenizer.HasMore().ShouldBe(false);
         }
 
+        [Fact]
+        public void GivenMissingValues_WhenAskedForToken_ThenShouldReturnEmptyToken()
+        {
+            Tokenizer tokenizer = new Tokenizer(CreateAStreamReaderFor("Hello,,World"), ',');
+            tokenizer.Next().ShouldBe(new Token(TokenType.Value, "Hello"));
+            tokenizer.Next().ShouldBe(new Token(TokenType.Value, string.Empty));
+            tokenizer.Next().ShouldBe(new Token(TokenType.Value, "World"));
+            tokenizer.Next().ShouldBe(new Token(TokenType.EndOfStream));
+        }
+
         private StreamReader CreateAStreamReaderFor(string str)
         {
             var stream = new MemoryStream(Encoding.UTF8.GetBytes(str));

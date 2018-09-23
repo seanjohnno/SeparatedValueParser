@@ -29,11 +29,7 @@ namespace SeparatedValuesParser.Tokenizer
         {
             while(!Stream.IsEnded)
             {
-                var nextStr = ReadNext();
-                if (nextStr.Length > 0)
-                {
-                    yield return nextStr;
-                }
+                yield return ReadNext();
             }      
         }
 

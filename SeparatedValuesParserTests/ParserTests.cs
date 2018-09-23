@@ -43,6 +43,34 @@ namespace CsvParserTests
             results[1].ShouldBe(new Record { Name = "Bob", Surname = "Burger", University = "University of Life", Age = 19, HonorStudent = true });
         }
 
+        [Fact]
+        public void TestPocoThatDoesntHaveAllTitles()
+        {
+            var results = new ParserBuilder<PartialRecord>()
+                .WithSeparator(',')
+                .WithSource(ReadEmbeddedResource("csvWithTitles.csv"))
+                .Build()
+                .ToList();
+
+            results.Count.ShouldBe(2);
+            results[0].ShouldBe(new PartialRecord { Name = "Testy", Age = 20 });
+            results[1].ShouldBe(new PartialRecord { Name = "Bob", Age = 19 });
+        }
+
+        [Fact]
+        public void TestMissingValues()
+        {
+            var results = new ParserBuilder<Record>()
+                .WithSeparator(',')
+                .WithSource(ReadEmbeddedResource("csvMissingValues.csv"))
+                .Build()
+                .ToList();
+
+            results.Count.ShouldBe(2);
+            results[0].ShouldBe(new Record { Name = "Testy", Surname = "Testerson", University = string.Empty, Age = 20, HonorStudent = false });
+            results[1].ShouldBe(new Record { Name = "Bob", Surname = string.Empty, University = "University of Life", Age = 19, HonorStudent = true });
+        }
+
         private StreamReader ReadEmbeddedResource(string name)
         {
             var assembly = Assembly.GetExecutingAssembly();
@@ -68,6 +96,20 @@ namespace CsvParserTests
                        University == record.University &&
                        Age == record.Age &&
                        HonorStudent == record.HonorStudent;
+            }
+        }
+
+        public class PartialRecord
+        {
+            public string Name { get; set; }
+            public int Age { get; set; }
+
+            public override bool Equals(object obj)
+            {
+                var record = obj as PartialRecord;
+                return record != null &&
+                       Name == record.Name &&
+                       Age == record.Age;
             }
         }
     }
