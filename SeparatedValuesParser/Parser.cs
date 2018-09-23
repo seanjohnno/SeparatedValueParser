@@ -12,16 +12,14 @@ namespace CsvParser
         private readonly char _separator;
         private readonly Tokenizer _tokenizer;
         private readonly List<string> _titles;
-        //private readonly List<PropertyInfo> _properties = new List<PropertyInfo>();
-        //private readonly List<int> _titleToPropertyPositions = new List<int>();
-
-        private Dictionary<string, PropertyInfo> _titleToProperty = new Dictionary<string, PropertyInfo>();
+        private readonly Dictionary<string, PropertyInfo> _titleToProperty;
 
         public Parser(char separator, Tokenizer streamReader, List<string> titles)
         {
             _separator = separator;
             _tokenizer = streamReader;
             _titles = titles ?? new List<string>();
+            _titleToProperty = new Dictionary<string, PropertyInfo>();
         }
 
         public IEnumerator<T> GetEnumerator() => GetTypedEnumerator();
@@ -96,8 +94,11 @@ namespace CsvParser
             values.Keys.ToList().ForEach(k =>
             {
                 var val = values[k];
-                var parsedVal = StringToType.ToType(val, k.PropertyType);
-                k.SetValue(obj, parsedVal);
+                if(!string.IsNullOrEmpty(val))
+                {
+                    var parsedVal = StringToType.ToType(val, k.PropertyType);
+                    k.SetValue(obj, parsedVal);
+                }
             });
             return obj;
         }

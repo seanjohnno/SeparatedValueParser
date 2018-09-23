@@ -67,8 +67,22 @@ namespace CsvParserTests
                 .ToList();
 
             results.Count.ShouldBe(2);
-            results[0].ShouldBe(new Record { Name = "Testy", Surname = "Testerson", University = string.Empty, Age = 20, HonorStudent = false });
-            results[1].ShouldBe(new Record { Name = "Bob", Surname = string.Empty, University = "University of Life", Age = 19, HonorStudent = true });
+            results[0].ShouldBe(new Record { Name = "Testy", Surname = "Testerson", University = null, Age = 20, HonorStudent = false });
+            results[1].ShouldBe(new Record { Name = "Bob", Surname = null, University = "University of Life", Age = 0, HonorStudent = true });
+        }
+
+        [Fact]
+        public void TestNullableValues()
+        {
+            var results = new ParserBuilder<RecordWithNullableField>()
+                .WithSeparator(',')
+                .WithSource(ReadEmbeddedResource("csvMissingValues.csv"))
+                .Build()
+                .ToList();
+
+            results.Count.ShouldBe(2);
+            results[0].ShouldBe(new RecordWithNullableField { Age = 20 });
+            results[1].ShouldBe(new RecordWithNullableField { Age = null });
         }
 
         private StreamReader ReadEmbeddedResource(string name)
@@ -109,6 +123,18 @@ namespace CsvParserTests
                 var record = obj as PartialRecord;
                 return record != null &&
                        Name == record.Name &&
+                       Age == record.Age;
+            }
+        }
+
+        public class RecordWithNullableField
+        {
+            public int? Age { get; set; }
+
+            public override bool Equals(object obj)
+            {
+                var record = obj as RecordWithNullableField;
+                return record != null &&
                        Age == record.Age;
             }
         }

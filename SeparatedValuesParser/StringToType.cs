@@ -10,51 +10,51 @@ namespace SeparatedValuesParser
             {
                 return value;
             }
-            else if (type == typeof(bool))
+            else if (type == typeof(bool) || type == typeof(bool?))
             {
                 return bool.Parse(value);
             }
-            else if(type == typeof(byte))
+            else if(type == typeof(byte) || type == typeof(byte?))
             {
                 return byte.Parse(value);
             }
-            else if(type == typeof(char))
+            else if(type == typeof(char) || type == typeof(char?))
             {
                 return char.Parse(value);
             }
-            else if(type == typeof(decimal))
+            else if(type == typeof(decimal) || type == typeof(decimal?))
             {
                 return decimal.Parse(value);
             }
-            else if(type == typeof(double))
+            else if(type == typeof(double) || type == typeof(double?))
             {
                 return double.Parse(value);
             }
-            else if (type == typeof(float))
+            else if (type == typeof(float) || type == typeof(float?))
             {
                 return float.Parse(value);
             }
-            else if (type == typeof(int))
+            else if (type == typeof(int) || type == typeof(int?))
             {
                 return int.Parse(value);
             }
-            else if (type == typeof(long))
+            else if (type == typeof(long) || type == typeof(long?))
             {
                 return long.Parse(value);
             }
-            else if (type == typeof(sbyte))
+            else if (type == typeof(sbyte) || type == typeof(sbyte?))
             {
                 return sbyte.Parse(value);
             }
-            else if (type == typeof(uint))
+            else if (type == typeof(uint) || type == typeof(uint?))
             {
                 return uint.Parse(value);
             }
-            else if (type == typeof(ulong))
+            else if (type == typeof(ulong) || type == typeof(ulong?))
             {
                 return ulong.Parse(value);
             }
-            else if (type == typeof(ushort))
+            else if (type == typeof(ushort) || type == typeof(ushort?))
             {
                 return ushort.Parse(value);
             }
